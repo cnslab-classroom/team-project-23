@@ -1,17 +1,45 @@
-// Customer.java
 public class Customer {
-    private String name;
+    private int id;
+    private Beverage preferredDrink;
+    private int budget;
 
-    public Customer(String name) {
-        this.name = name;
+    public Customer(int id, Beverage preferredDrink, int budget) {
+        this.id = id;
+        this.preferredDrink = preferredDrink;
+        this.budget = budget;
     }
 
-    public void purchaseBeverage(InventoryManager inventoryManager, String beverageName, int quantity) {
-        if (inventoryManager.checkInventory(beverageName, quantity)) {
-            inventoryManager.reduceInventory(beverageName, quantity);
-            System.out.println(name + " purchased " + quantity + " " + beverageName);
-        } else {
-            System.out.println("Insufficient inventory for " + beverageName);
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Beverage getPreferredDrink() {
+        return preferredDrink;
+    }
+
+    public void setPreferredDrink(Beverage preferredDrink) {
+        this.preferredDrink = preferredDrink;
+    }
+
+    public int getBudget() {
+        return budget;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
+
+    public void buy(Beverage beverage, int quantity, InventoryManager inventoryManager) {
+        int totalCost = beverage.getPrice() * quantity;
+        if (totalCost > budget) {
+            throw new IllegalArgumentException("Not enough budget to buy this quantity.");
         }
+
+        inventoryManager.sellBeverage(beverage, quantity);
+        budget -= totalCost;
     }
 }

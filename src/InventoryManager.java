@@ -1,40 +1,38 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class InventoryManager {
-    private Map<String, Integer> inventory = new HashMap<>();
+    private Inventory inventory;
+    private Map<Beverage, Integer> weeklySales;
 
-    // Add a beverage to the inventory
-    public void addBeverage(String name, int quantity) {
-        inventory.put(name, inventory.getOrDefault(name, 0) + quantity);
-        System.out.println("Added " + quantity + " units of " + name + " to inventory.");
+    public InventoryManager(Inventory inventory) {
+        this.inventory = inventory;
+        this.weeklySales = new HashMap<>();
     }
 
-    // Check if the inventory has enough quantity of a beverage
-    public boolean checkInventory(String name, int quantity) {
-        return inventory.getOrDefault(name, 0) >= quantity;
+    public void sellBeverage(Beverage beverage, int quantity) {
+        int totalCost = beverage.getPrice() * quantity;
+        inventory.deductStock(beverage, quantity);
+        inventory.adjustCapital(totalCost);
+        weeklySales.put(beverage, weeklySales.getOrDefault(beverage, 0) + quantity);
     }
 
-    // Reduce the inventory by a certain quantity of a beverage
-    public void reduceInventory(String name, int quantity) {
-        if (checkInventory(name, quantity)) {
-            inventory.put(name, inventory.get(name) - quantity);
-            System.out.println("Reduced " + quantity + " units of " + name + " from inventory.");
-        } else {
-            System.out.println("Insufficient inventory for " + name);
+    public void restockBeverage(Beverage beverage, int quantity, int costPerUnit) {
+        int totalCost = costPerUnit * quantity;
+        if (totalCost > inventory.getCapital()) {
+            throw new IllegalArgumentException("Not enough capital to restock.");
+        }
+        inventory.addStock(beverage, quantity);
+        inventory.adjustCapital(-totalCost);
+    }
+
+    public void printWeeklySales() {
+        System.out.println("Weekly Sales Report:");
+        for (Map.Entry<Beverage, Integer> entry : weeklySales.entrySet()) {
+            System.out.println(entry.getKey().getName() + ": " + entry.getValue() + " units sold");
         }
     }
 
-    // Replenish the inventory by adding a certain quantity of a beverage
-    public void replenishInventory(String name, int quantity) {
-        addBeverage(name, quantity);
-    }
-
-    // Display the current inventory status
-    public void displayInventory() {
-        System.out.println("Current Inventory:");
-        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue() + " units");
-        }
+    public Inventory getInventory() {
+        return inventory;
     }
 }
