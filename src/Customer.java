@@ -1,45 +1,27 @@
 public class Customer {
-    private int id;
+    private String id;
     private Beverage preferredDrink;
-    private int budget;
 
-    public Customer(int id, Beverage preferredDrink, int budget) {
+    public Customer(String id, Beverage preferredDrink) {
         this.id = id;
         this.preferredDrink = preferredDrink;
-        this.budget = budget;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Beverage getPreferredDrink() {
         return preferredDrink;
     }
 
-    public void setPreferredDrink(Beverage preferredDrink) {
-        this.preferredDrink = preferredDrink;
-    }
-
-    public int getBudget() {
-        return budget;
-    }
-
-    public void setBudget(int budget) {
-        this.budget = budget;
-    }
-
-    public void buy(Beverage beverage, int quantity, InventoryManager inventoryManager) {
-        int totalCost = beverage.getPrice() * quantity;
-        if (totalCost > budget) {
-            throw new IllegalArgumentException("Not enough budget to buy this quantity.");
+    public void buy(Beverage beverage, int quantity, InventoryManager<Beverage> inventoryManager) {
+        if (inventoryManager.checkInventory(beverage.getName(), quantity)) {
+            inventoryManager.reduceInventory(beverage.getName(), quantity);
+            inventoryManager.addCapital(beverage.getPrice() * quantity);
+            System.out.println(id + " bought " + quantity + " " + beverage.getName());
+        } else {
+            throw new IllegalArgumentException("Insufficient stock.");
         }
-
-        inventoryManager.sellBeverage(beverage, quantity);
-        budget -= totalCost;
     }
 }

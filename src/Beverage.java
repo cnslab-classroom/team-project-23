@@ -1,80 +1,52 @@
-import java.util.*;
-
-public class Beverage {
-    private String category;
+public abstract class Beverage {
     private String name;
-    private int price;
-    private int stock;
+    private double price;
 
-    public Beverage(String category, String name, int price, int stock) {
-        this.category = category;
+    public Beverage(String name, double price) {
         this.name = name;
         this.price = price;
-        this.stock = stock;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
+    public abstract void displayInfo();
 
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
-    public void purchase(int quantity) {
-        if (quantity > stock) {
-            throw new IllegalArgumentException("Not enough stock available.");
+    public static class Coffee extends Beverage {
+        public Coffee(String name, double price) {
+            super(name, price);
         }
-        stock -= quantity;
+
+        @Override
+        public void displayInfo() {
+            System.out.println("Coffee: " + getName() + ", Price: " + getPrice());
+        }
     }
 
-    public void restock(int quantity) {
-        stock += quantity;
+    public static class EnergyDrink extends Beverage {
+        public EnergyDrink(String name, double price) {
+            super(name, price);
+        }
+
+        @Override
+        public void displayInfo() {
+            System.out.println("Energy Drink: " + getName() + ", Price: " + getPrice());
+        }
     }
 
-    public static List<Beverage> initializeBeverages() {
-        List<Beverage> beverages = new ArrayList<>();
+    public static class Smoothie extends Beverage {
+        public Smoothie(String name, double price) {
+            super(name, price);
+        }
 
-        beverages.add(new Beverage("coffee", "americano", 2000, 10));
-        beverages.add(new Beverage("coffee", "espresso", 1500, 10));
-        beverages.add(new Beverage("coffee", "latte", 3200, 10));
-
-        beverages.add(new Beverage("energy drink", "blue", 2300, 10));
-        beverages.add(new Beverage("energy drink", "white", 2200, 10));
-        beverages.add(new Beverage("energy drink", "pink", 2000, 10));
-
-        beverages.add(new Beverage("smoothie", "blueberry smoothie", 3500, 10));
-        beverages.add(new Beverage("smoothie", "strawberry smoothie", 4000, 10));
-        beverages.add(new Beverage("smoothie", "plain smoothie", 3000, 10));
-
-        beverages.add(new Beverage("ade", "mango", 2500, 10));
-        beverages.add(new Beverage("ade", "apple", 3000, 10));
-        beverages.add(new Beverage("ade", "pineapple", 2800, 10));
-
-        return beverages;
+        @Override
+        public void displayInfo() {
+            System.out.println("Smoothie: " + getName() + ", Price: " + getPrice());
+        }
     }
 }
