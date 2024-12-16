@@ -1,3 +1,5 @@
+/* 수정 사항 */
+// 1. 재고 빌려오는 것 줄 겹쳐서 출력되는 문제 수정
 public class InventoryManagerThread<T extends Beverage> extends Thread {
     private InventoryManager<T> inventoryManager;
     private String beverageName;
@@ -20,7 +22,6 @@ public class InventoryManagerThread<T extends Beverage> extends Thread {
                 if (currentStock == 0 && !replenishing) { // 보충 중이 아닐 때만 수행
                     replenishing = true; // 보충 시작
                     inventoryManager.replenishInventory(beverageName, replenishQuantity);
-                    System.out.println("Replenished " + replenishQuantity + " units of " + beverageName);
                     replenishing = false; // 보충 완료
                 }
             }
