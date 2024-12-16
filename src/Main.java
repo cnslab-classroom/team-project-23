@@ -34,15 +34,21 @@ public class Main {
                 }
             }
 
-            // Afternoon (PM): Customer Turn
+            // Afternoon (PM): Customer Turn with Threads
             System.out.println("-- Afternoon: Customer Turn --");
+            List<Thread> customerThreads = new ArrayList<>();
             for (Customer customer : customers) {
-                Beverage preferredDrink = customer.getPreferredDrink();
+                ConsumerThread consumerThread = new ConsumerThread(customer, inventoryManager, beverages);
+                customerThreads.add(consumerThread);
+                consumerThread.start();
+            }
+
+            // Wait for all customer threads to finish
+            for (Thread thread : customerThreads) {
                 try {
-                    customer.buy(preferredDrink, 1, inventoryManager);
-                    System.out.println(customer.getId() + " bought " + preferredDrink.getName());
-                } catch (IllegalArgumentException e) {
-                    System.out.println(customer.getId() + " couldn't buy " + preferredDrink.getName() + ": Insufficient stock or budget.");
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
 
